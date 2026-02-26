@@ -1,0 +1,13 @@
+camera_viewer_node:
+  ros__parameters:
+    window_name: 'ROV Camera Feed'
+
+gamepad_node:
+  ros__parameters:
+    publish_rate: 50.0
+    deadzone: 0.1
+    max_power: 1.0
+
+dashboard_node:
+  ros__parameters:
+    display_rate: 2.0
