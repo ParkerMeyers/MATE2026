@@ -13,7 +13,7 @@ class SensorNode(Node):
     def __init__(self):
         super().__init__('sensor_node')
 
-        self.declare_parameter('publish_rate', 10.0)
+        self.declare_parameter('publish_rate', 30.0)
         publish_rate = self.get_parameter('publish_rate').value
 
         self.publisher = self.create_publisher(SensorData, '/rov/sensor_data', 10)
