@@ -30,8 +30,6 @@ class CameraNode(Node):
         self.publish_compressed = self.get_parameter('publish_compressed').value
         self.jpeg_quality = self.get_parameter('jpeg_quality').value
 
-        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
-
         # Initialize camera 
         self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2)
 
@@ -39,7 +37,10 @@ class CameraNode(Node):
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
             raise RuntimeError(f'Cannot open camera {camera_index}')
 
-        # Set desired resolution and FPS (camera will use closest supported mode)
+        # CRITICAL: Force MJPEG format BEFORE setting resolution/FPS
+        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+
+        # Set desired resolution and FPS
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
         self.cap.set(cv2.CAP_PROP_FPS, fps)
