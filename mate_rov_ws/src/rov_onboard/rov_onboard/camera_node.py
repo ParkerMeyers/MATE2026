@@ -33,9 +33,10 @@ class CameraNode(Node):
         # Construct a GStreamer pipeline string
         # This grabs the MJPEG stream, decodes it, and converts it to BGR for OpenCV
         pipeline = (
-            f"v4l2src device=/dev/video{camera_index} ! "
+            f"v4l2src device=/dev/video{camera_index} io-mode=2 do-timestamp=true ! "
             f"image/jpeg, width={frame_width}, height={frame_height}, framerate={fps}/1 ! "
-            f"jpegdec ! videoconvert ! appsink"
+            f"jpegdec ! videoconvert ! "
+            f"appsink sync=false max-buffers=1 drop=true"
         )
         
         # Initialize camera using GStreamer backend
