@@ -32,9 +32,9 @@ class CameraNode(Node):
 
         # Initialize camera
         self.cap = cv2.VideoCapture(camera_index)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, "1280")
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, "720")
-        self.cap.set(cv2.CAP_PROP_FPS, "60")
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
+        self.cap.set(cv2.CAP_PROP_FPS, fps)
 
         if not self.cap.isOpened():
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
