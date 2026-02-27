@@ -18,7 +18,7 @@ class CameraNode(Node):
         self.declare_parameter('camera_index', 0)
         self.declare_parameter('frame_width', 1280)
         self.declare_parameter('frame_height', 720)
-        self.declare_parameter('fps', 1)
+        self.declare_parameter('fps', 60)
         self.declare_parameter('publish_compressed', True)
         self.declare_parameter('jpeg_quality', 95)
 
@@ -32,9 +32,9 @@ class CameraNode(Node):
 
         # Initialize camera
         self.cap = cv2.VideoCapture(camera_index)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
-        self.cap.set(cv2.CAP_PROP_FPS, fps)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+        self.cap.set(cv2.CAP_PROP_FPS, 60)
 
         if not self.cap.isOpened():
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
