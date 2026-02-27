@@ -30,12 +30,10 @@ class CameraNode(Node):
         self.publish_compressed = self.get_parameter('publish_compressed').value
         self.jpeg_quality = self.get_parameter('jpeg_quality').value
 
-        # List camera driver options:
-        # - CAP_ANY
-        # - CAP_DSHOW
-        # - CAP_V4L2
+        self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+
         # Initialize camera 
-        self.cap = cv2.VideoCapture(camera_index, cv2.CAP_ANY)
+        self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2)
 
         if not self.cap.isOpened():
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
