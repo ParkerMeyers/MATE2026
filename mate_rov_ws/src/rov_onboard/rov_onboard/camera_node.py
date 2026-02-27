@@ -18,9 +18,9 @@ class CameraNode(Node):
         self.declare_parameter('camera_index', 0)
         self.declare_parameter('frame_width', 1280)
         self.declare_parameter('frame_height', 720)
-        self.declare_parameter('fps', 60)
+        self.declare_parameter('fps', 1)
         self.declare_parameter('publish_compressed', True)
-        self.declare_parameter('jpeg_quality', 5)
+        self.declare_parameter('jpeg_quality', 95)
 
         # Get parameters
         camera_index = self.get_parameter('camera_index').value
