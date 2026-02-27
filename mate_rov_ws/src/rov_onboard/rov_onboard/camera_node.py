@@ -30,8 +30,23 @@ class CameraNode(Node):
         self.publish_compressed = self.get_parameter('publish_compressed').value
         self.jpeg_quality = self.get_parameter('jpeg_quality').value
 
-        # Initialize camera 
-        self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2)
+        # Construct a GStreamer pipeline string
+        # This grabs the MJPEG stream, decodes it, and converts it to BGR for OpenCV
+        pipeline = (
+            f"v4l2src device=/dev/video{camera_index} ! "
+            f"image/jpeg, width={frame_width}, height={frame_height}, framerate={fps}/1 ! "
+            f"jpegdec ! videoconvert ! appsink"
+        )
+        
+        # Initialize camera using GStreamer backend
+        self.cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
+
+        if not self.cap.isOpened():
+            self.get_logger().error(f'Failed to open camera with GStreamer on /dev/video{camera_index}')
+            raise RuntimeError(f'Cannot open camera {camera_index}')
+            
+        # (Note: You do not need the .set() commands for width/height/fps when using GStreamer 
+        # because the pipeline string handles the negotiation automatically.)
 
         if not self.cap.isOpened():
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
