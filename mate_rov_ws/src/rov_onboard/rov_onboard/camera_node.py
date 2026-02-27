@@ -30,18 +30,25 @@ class CameraNode(Node):
         self.publish_compressed = self.get_parameter('publish_compressed').value
         self.jpeg_quality = self.get_parameter('jpeg_quality').value
 
-        # Initialize camera
-        self.cap = cv2.VideoCapture(camera_index)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
-        self.cap.set(cv2.CAP_PROP_FPS, fps)
+        # Initialize camera using V4L2 backend (more reliable than GStreamer for USB cameras)
+        self.cap = cv2.VideoCapture(camera_index, cv2.CAP_V4L2)
 
         if not self.cap.isOpened():
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
             raise RuntimeError(f'Cannot open camera {camera_index}')
 
+        # Set desired resolution and FPS (camera will use closest supported mode)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
+        self.cap.set(cv2.CAP_PROP_FPS, fps)
+
+        # Log the actual values the camera accepted
+        actual_w = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        actual_h = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        actual_fps = self.cap.get(cv2.CAP_PROP_FPS)
         self.get_logger().info(
-            f'Camera opened: {frame_width}x{frame_height} @ {fps}fps (index {camera_index})'
+            f'Camera opened: requested {frame_width}x{frame_height}@{fps}fps, '
+            f'actual {actual_w}x{actual_h}@{actual_fps:.1f}fps (index {camera_index})'
         )
 
         # Publishers
