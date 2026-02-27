@@ -30,8 +30,8 @@ class CameraNode(Node):
         self.publish_compressed = self.get_parameter('publish_compressed').value
         self.jpeg_quality = self.get_parameter('jpeg_quality').value
 
-        # Initialize camera using V4L2 backend (more reliable than GStreamer for USB cameras)
-        self.cap = cv2.VideoCapture(camera_index)
+        # Initialize camera 
+        self.cap = cv2.VideoCapture(camera_index, cv2.CAP_DSHOW)
 
         if not self.cap.isOpened():
             self.get_logger().error(f'Failed to open camera at index {camera_index}')
